@@ -1,45 +1,47 @@
 package com.example.booksanchorapp.adapter
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.booksanchorapp.Detalle
 import com.example.booksanchorapp.R
 import com.example.booksanchorapp.databinding.LibroItemBinding
+import com.example.booksanchorapp.modelo.LibroI
 import com.example.booksanchorapp.modelo.LibroItem
 import com.squareup.picasso.Picasso
 
-class LibroAdapter (private val datos:List<LibroItem>): RecyclerView.Adapter<LibroAdapter.ViewHolder>(){
+const val LIBROID_MESSAGE = "com.example.booksanchorapp.LIBROID"
 
-    class ViewHolder(view: View):RecyclerView.ViewHolder(view){
-        val imageView: ImageView
-        val lbTitulo:TextView
-        val lbAutor:TextView
-        val lbPais:TextView
-        val lbLenguaje: TextView
+class LibroAdapter (private val datos:List<LibroI>): RecyclerView.Adapter<LibroAdapter.ViewHolder>(){
 
-        init {
-            imageView = view.findViewById(R.id.imageView)
-            lbTitulo = view.findViewById(R.id.lbTitulo)
-            lbAutor = view.findViewById(R.id.lbAutor)
-            lbPais = view.findViewById(R.id.lbPais)
-            lbLenguaje = view.findViewById(R.id.lbLenguaje)
-        }
-    }
+    class ViewHolder(val binding: LibroItemBinding):RecyclerView.ViewHolder(binding.root)
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-            val view = LayoutInflater.from(parent.context).inflate(R.layout.libro_item, parent, false)
-            return ViewHolder(view)
+            val binding = LibroItemBinding.inflate(LayoutInflater.from(parent.context), parent,  false)
+            return ViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             val libro = datos.get(position)
-            holder.lbTitulo.text = libro.titulo
-            holder.lbAutor.text = libro.autor
-            holder.lbPais.text = libro.pais
-            holder.lbLenguaje.text = libro.lenguaje
-            Picasso.get().load(libro.imagen).into(holder.imageView)
+            with(holder.binding) {
+                lbTitulo.text = libro.titulo
+                lbAutor.text = "Autor: ${libro.autor}"
+                lbPais.text = "País: ${libro.pais}"
+                lbLenguaje.text = "Lenguaje: ${libro.lenguaje}"
+                Picasso.get().load(libro.imagen).into(imageView)
+            }
+        // click over libro item
+        holder.binding.root.setOnClickListener(View.OnClickListener{
+            val intent = Intent(it.context, Detalle::class.java).apply {
+                putExtra(LIBROID_MESSAGE, libro.id)
+            }
+            it.context.startActivity(intent)
+        })
 
 
     }
