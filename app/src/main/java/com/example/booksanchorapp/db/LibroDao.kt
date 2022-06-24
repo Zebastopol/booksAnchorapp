@@ -1,9 +1,6 @@
 package com.example.booksanchorapp.db
 
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 
 @Dao
 interface LibroDao {
@@ -12,8 +9,10 @@ interface LibroDao {
     fun getAll() : List<LibroEntity>
     @Query("SELECT * FROM libros WHERE id = :lid")
     fun findById(lid: Int): LibroEntity
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(vararg libros: LibroEntity)
     @Delete
-    fun deleteAll(libro: LibroEntity)
+    fun delete(libro:LibroEntity)
+    @Query("DELETE FROM libros")
+    fun deleteAll()
 }

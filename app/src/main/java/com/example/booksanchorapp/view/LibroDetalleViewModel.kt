@@ -19,9 +19,9 @@ class LibroDetalleViewModel(application: Application): AndroidViewModel(applicat
         viewModelScope.launch {
             val app = getApplication<AnchorBooksApp>()
             val repo = LibroRepo(app.libroService, app.libroDao)
-            val libroFromRepo = repo.findAll()
-            if( !librosFromRepo.isNullOrEmpty() ){
-                libros.postValue(librosFromRepo)
+            val libroFromRepo = repo.findById(id)
+            if( libroFromRepo != null ){
+                libro.postValue(libroFromRepo)
             }
         }
     }

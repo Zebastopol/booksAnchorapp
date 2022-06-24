@@ -3,6 +3,7 @@ package com.example.booksanchorapp.retrofit
 import androidx.room.Room
 import com.example.booksanchorapp.db.BaseDatos
 import com.example.booksanchorapp.db.LibroDao
+import com.example.booksanchorapp.helper.LibroHelper
 import com.example.booksanchorapp.mapper.LibroMapper
 import com.example.booksanchorapp.modelo.LibroI
 import com.example.booksanchorapp.modelo.LibroItem
@@ -35,9 +36,13 @@ class LibroRepo (
         return withContext(Dispatchers.IO) {
             val response = libroService.detailBook(id)
             if( response.isSuccessful) {
-                val libro = response.body() ?:
-            }else{
+                val libro = response.body() ?: LibroHelper.emptyLibroModel()
+                //Aquí cachea los libros en la DB
+                libroDao.insertAll( LibroMapper.toEntity(libro))
+                libro
 
+            }else{
+                libroDao.findById(id)
             }
         }
     }

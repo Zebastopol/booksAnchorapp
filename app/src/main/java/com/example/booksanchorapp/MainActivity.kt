@@ -28,6 +28,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // RECYCLERVIEW
         val recyclerView = binding.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(this)
 
